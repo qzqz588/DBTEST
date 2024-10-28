@@ -1,58 +1,66 @@
 package Domain;
 
 public class UserDTO {
-	int bookCode; 
-	int classificationId; 
-	String bookAuthor; 
-	String bookName; 
-	String publisher;  
-	boolean isreserve;
-	public UserDTO(int bookCode, int classificationId, String bookAuthor, String bookName, String publisher,
-			boolean isreserve) {
+	int member_no; 
+	String member_name; 
+	char grade; 
+	String phone;  
+	String address;
+
+	public UserDTO() {}
+	
+	public UserDTO(int member_no, String member_name, char grade, String phone, String address) {
 		super();
-		this.bookCode = bookCode;
-		this.classificationId = classificationId;
-		this.bookAuthor = bookAuthor;
-		this.bookName = bookName;
-		this.publisher = publisher;
-		this.isreserve = isreserve;
+		this.member_no = member_no;
+		this.member_name = member_name;
+		this.grade = grade;
+		this.phone = phone;
+		this.address = address;
 	}
-	public int getBookCode() {
-		return bookCode;
+
+	public int getMember_no() {
+		return member_no;
 	}
-	public void setBookCode(int bookCode) {
-		this.bookCode = bookCode;
+
+	public void setMember_no(int member_no) {
+		this.member_no = member_no;
 	}
-	public int getClassificationId() {
-		return classificationId;
+
+	public String getMember_name() {
+		return member_name;
 	}
-	public void setClassificationId(int classificationId) {
-		this.classificationId = classificationId;
+
+	public void setMember_name(String member_name) {
+		this.member_name = member_name;
 	}
-	public String getBookAuthor() {
-		return bookAuthor;
+
+	public char getGrade() {
+		return grade;
 	}
-	public void setBookAuthor(String bookAuthor) {
-		this.bookAuthor = bookAuthor;
+
+	public void setGrade(char grade) {
+		this.grade = grade;
 	}
-	public String getBookName() {
-		return bookName;
+
+	public String getPhone() {
+		return phone;
 	}
-	public void setBookName(String bookName) {
-		this.bookName = bookName;
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
-	public String getPublisher() {
-		return publisher;
+
+	public String getAddress() {
+		return address;
 	}
-	public void setPublisher(String publisher) {
-		this.publisher = publisher;
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
-	public boolean isIsreserve() {
-		return isreserve;
+
+	@Override
+	public String toString() {
+		return "UserDTO [member_no=" + member_no + ", member_name=" + member_name + ", grade=" + grade + ", phone="
+				+ phone + ", address=" + address + "]";
 	}
-	public void setIsreserve(boolean isreserve) {
-		this.isreserve = isreserve;
-	}  
-	
-	
 }

@@ -2,7 +2,7 @@ package Domain;
 
 public class AccDTO {
 	int acc_no; 
-	int acc_type; 
+	String acc_type; 
 	int price; 
 	int brand_no; 
 	int material_no;  
@@ -14,7 +14,7 @@ public class AccDTO {
 				+ ", material_no=" + material_no + "]";
 	}
 
-	public AccDTO(int acc_no, int acc_type, int price, int brand_no, int material_no) {
+	public AccDTO(int acc_no, String acc_type, int price, int brand_no, int material_no) {
 		super();
 		this.acc_no = acc_no;
 		this.acc_type = acc_type;
@@ -35,11 +35,11 @@ public class AccDTO {
 		this.acc_no = acc_no;
 	}
 
-	public int getAcc_type() {
+	public String getAcc_type() {
 		return acc_type;
 	}
 
-	public void setAcc_type(int acc_type) {
+	public void setAcc_type(String acc_type) {
 		this.acc_type = acc_type;
 	}
 

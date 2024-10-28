@@ -29,7 +29,7 @@ public class AccDAO {
 		return instance;
 	}
 
-	private AccDAO() {
+	public AccDAO() {
 		try {
 			Class.forName(driver);
 			System.out.println("Driver Loading Success");
@@ -46,7 +46,7 @@ public class AccDAO {
 			sql = "insert into Accessory_tbl values(?,?,?,?,?)";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, dto.getAcc_no());
-			pstmt.setInt(2, dto.getAcc_type());
+			pstmt.setString(2, dto.getAcc_type());
 			pstmt.setInt(3, dto.getPrice());
 			pstmt.setInt(4, dto.getBrand_no());
 			pstmt.setInt(5, dto.getMaterial_no());
@@ -69,14 +69,15 @@ public class AccDAO {
 		}
 	}
 
-	public void Update(AccDTO dto) {
+	public void Update(AccDTO dto, Integer acc_no) {
 		try {
 
 			sql = "update Accessory_tbl set acc_type=?,price=?,brand_no=?,material_no=? where acc_no=?";
-			pstmt.setInt(1, dto.getAcc_type());
+			pstmt.setString(1, dto.getAcc_type());
 			pstmt.setInt(2, dto.getPrice());
 			pstmt.setInt(3, dto.getBrand_no());
 			pstmt.setInt(4, dto.getMaterial_no());
+			pstmt.setInt(5, dto.getAcc_no());
 
 			int result = pstmt.executeUpdate();
 			if (result != 0) {
@@ -106,7 +107,7 @@ public class AccDAO {
 			if (rs!=null) {
 				if(rs.next()) {
 					dto = new AccDTO();
-					dto.setAcc_type(rs.getInt("acc_type"));
+					dto.setAcc_type(rs.getString("acc_type"));
 					dto.setPrice(rs.getInt("price"));
 					dto.setBrand_no(rs.getInt("brand_no"));
 					dto.setMaterial_no(rs.getInt("material_no"));
@@ -123,7 +124,7 @@ public class AccDAO {
 	public List<AccDTO> selectAll() throws SQLException {
 		List<AccDTO> list = new ArrayList();
 		try {
-			pstmt = con.prepareStatement("select * from tbl_book");
+			pstmt = con.prepareStatement("select * from Accessory_tbl");
 			
 			rs = pstmt.executeQuery();
 			AccDTO dto=null;
@@ -131,7 +132,7 @@ public class AccDAO {
 				while(rs.next()) {
 					dto = new AccDTO();
 					dto.setAcc_no(rs.getInt("acc_no"));
-					dto.setAcc_type(rs.getInt("acc_type"));
+					dto.setAcc_type(rs.getString("acc_type"));
 					dto.setPrice(rs.getInt("price"));
 					dto.setBrand_no(rs.getInt("brand_no"));
 					dto.setMaterial_no(rs.getInt("material_no"));
@@ -149,7 +150,7 @@ public class AccDAO {
 	
 	public void delete(int acc_no) throws SQLException {
 		try {
-		pstmt = con.prepareStatement("delete from tbl_book where acc_no=?");
+		pstmt = con.prepareStatement("delete from Accessory_tbl where acc_no=?");
 		pstmt.setInt(1,acc_no);
 		
 		int result =  pstmt.executeUpdate();

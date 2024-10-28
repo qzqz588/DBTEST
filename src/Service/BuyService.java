@@ -8,19 +8,19 @@ import java.util.Map;
 import Domain.AccDAO;
 import Domain.AccDTO;
 
-public class AccService {
+public class BuyService {
 	AccDAO accdao;
 
 	// 싱글톤 패턴
-	private static AccService instance = new AccService();
+	private static BuyService instance = new BuyService();
 
-	private AccService() {
+	private BuyService() {
 		accdao = AccDAO.getInstance();
 	}
 
-	public static AccService getInstance() {
+	public static BuyService getInstance() {
 		if (instance == null)
-			instance = new AccService();
+			instance = new BuyService();
 		return instance;
 	}
 //액세서리 추가
@@ -42,21 +42,20 @@ public class AccService {
 		return returnValue;
 	}
 //액세서리 수정
-	public Map<String, Object> AccUpdate(AccDTO dto) {
+	public Map<String, Object> AccUpdate(AccDTO dto, Integer acc_no) {
 		Map<String, Object> returnValue = new HashMap();
-		AccDTO dto2 = accdao.Select(dto.getAcc_no());
-		if (dto == null) {
+		if (acc_no == null) {
 			returnValue.put("success", false);
 			returnValue.put("message", "유효한 넘버가 필요합니다.");
 		} else {
 			try {
-				if(dto2.getAcc_type().equals(dto.getAcc_type()) && dto2.getBrand_no() == dto.getBrand_no() 
-						&& dto2.getPrice() == dto.getPrice() && dto2.getMaterial_no() == dto.getMaterial_no() ) {
-					returnValue.put("success", false);
-					returnValue.put("message", "수정할 내용이 없습니다.");
-				} else {
+				int updateCount = accdao.Update(dto, acc_no);
+				if (updateCount > 0) {
 					returnValue.put("success", true);
-					returnValue.put("message", "액세서리 업데이트 완료");
+					returnValue.put("message", "액세서리가 성공적으로 수정되었습니다.");
+				} else {
+					returnValue.put("success", false);
+					returnValue.put("message", "해당 넘버의 액세서리가 존재하지 않습니다.");
 				}
 			} catch (Exception e) {
 				returnValue.put("success", false);
@@ -92,6 +91,8 @@ public class AccService {
 		    return returnValue;  // 결과 반환
 		}
 		
+
+	}
 //Select
 	public Map<String, Object> Select(int acc_no) {
 		Map<String, Object> returnValue = new HashMap();
@@ -112,19 +113,15 @@ public class AccService {
 //액세서리 삭제
 	public Map<String, Object> deleteAccessory(int acc_no) {
 	    Map<String, Object> result = new HashMap<>();
-	    AccDTO dto2 = accdao.Select(acc_no);
+
 	    try {
 	        // DAO의 delete 메서드 호출
-	    	accdao.delete(acc_no);
-	    	
+	        accdao.delete(acc_no);
+
 	        // 삭제가 성공적으로 수행되었는지 확인
 	        result.put("success", true);
 	        result.put("message", "액세서리가 성공적으로 삭제되었습니다.");
 	        
-	        if(accdao.Select(acc_no) == null) {
-	        	result.put("success", false);
-	        	result.put("message","액세서리가 삭제되지않았습니다");
-	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        result.put("success", false);

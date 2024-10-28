@@ -1,16 +1,16 @@
 package Controller;
 
-import Domain.AccDTO;
+import Domain.BookDTO;
 import Service.BookService;
 
-public class BookController implements Controller{
+public class MemberController implements Controller{
 
 	//멤버 
-	BookService service=service =BookService.getInstance();
+	MemberService service =MemberService.getInstance();
 	
 
 	@Override
-	public void execute(int num, AccDTO dto) {
+	public void execute(int num, UserDTO dto) {
 		 
 		switch(num)
 		{

@@ -3,7 +3,7 @@ package Controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import Domain.AccDTO;
+
 
 public class FrontController {
 	
@@ -23,15 +23,16 @@ public class FrontController {
 	
 	//서브컨트롤러 식별 등록
 	void Init() {
-		map.put("BOOK",new BookController());
-		//map.put("MEMBER",new MemberController() );
-		//map.put("RENTAL",new RentalController() );
+		map.put("MEMBER",new MemberController());
+		map.put("ACC",new AccController() );
+//		map.put("BUY",new BuyController() );
 	
 	}
 	
 	//서브컨트롤러 실행하기 
-	public void SubControllerEX(String menu,int num,AccDTO dto) {	
-		Controller sub= map.get(menu);
+	public void SubControllerEX(Map<String,Object>params, int num, Object dto) {
+		String endPoint = (String)params.get("endPoint");
+		Controller sub= map.get(endPoint);
 		sub.execute(num, dto);
 		
 	}

@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDAO {
+public class BuyDAO {
 	
 	private String driver = "oracle.jdbc.driver.OracleDriver";
 	private String url = "jdbc:oracle:thin:@localhost:1521:XE";
@@ -20,14 +20,14 @@ public class UserDAO {
 	private Connection con = null;			//연결 정보 저장
 	
 	//싱글톤 패턴
-	private static UserDAO instance = new UserDAO();
+	private static BuyDAO instance = new BuyDAO();
 	 
-	public static UserDAO getInstance(){
+	public static BuyDAO getInstance(){
 		if(instance==null)
-			instance=new UserDAO();
+			instance=new BuyDAO();
 		return instance;
 	}
-	private UserDAO(){
+	private BuyDAO(){
 		try 
 		{
 			Class.forName(driver);
@@ -41,22 +41,49 @@ public class UserDAO {
 	}
 	
 	
-	public void Insert(UserDTO dto){
+	public void Insert(BuyDTO dto){
 		try {
 			
-			sql="insert into Member_tbl values(?,?,?,?,?)";
+			sql="insert into Buy_tbl values(?,?,?,?,?,?)";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, dto.getMember_no());
-			pstmt.setString(2, dto.getMember_name());
+			pstmt.setInt(2, dto.getAcc_no());
+			pstmt.setInt(3, dto.getBuy_no());
+			pstmt.setString(4, dto.getGrade()+"");
+			pstmt.setString(5, dto.getBrand());
+			pstmt.setInt(6, dto.getPrice());
+			
+			int result = pstmt.executeUpdate();
+			if(result!=0) {
+				System.out.println("구매 성공!");
+			}else {
+				System.out.println("구매 실패!");
+			}
+			 
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try{pstmt.close();}catch(Exception e) {e.printStackTrace();}
+		}
+	}
+	void Update(BuyDTO dto) {
+		try {
+			
+			sql="update Buy_tbl set member_no=?, acc_no=?, grade=?,brand=?,price=? where buy_no=?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, dto.getMember_no());
+			pstmt.setInt(2, dto.getAcc_no());
 			pstmt.setString(3, dto.getGrade()+"");
-			pstmt.setString(4, dto.getPhone());
-			pstmt.setString(5, dto.getAddress());
+			pstmt.setString(4, dto.getBrand());
+			pstmt.setInt(5, dto.getPrice());
+			pstmt.setInt(5, dto.getBuy_no());
 			
 			int result = pstmt.executeUpdate();
 			if(result!=0) {
-				System.out.println("멤버 등록 성공!");
+				System.out.println("구매 수정 성공!");
 			}else {
-				System.out.println("멤버 등록 실패!");
+				System.out.println("구매 수정 실패!");
 			}
 			 
 			
@@ -66,49 +93,25 @@ public class UserDAO {
 			try{pstmt.close();}catch(Exception e) {e.printStackTrace();}
 		}
 	}
-	void Update(UserDTO dto) {
+	public BuyDTO Select(int buy_no) {
+		BuyDTO dto = null;
 		try {
-			
-			sql="update Member_tbl set member_name=?, grade=?, phone=?, address=? where member_no=?";
+			sql="select * from Buy_tbl where buy_no=?";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, dto.getMember_name());
-			pstmt.setString(2, dto.getGrade()+"");
-			pstmt.setString(3, dto.getPhone());
-			pstmt.setString(4, dto.getAddress());
-			pstmt.setInt(5, dto.getMember_no());
-			
-			int result = pstmt.executeUpdate();
-			if(result!=0) {
-				System.out.println("멤버 수정 성공!");
-			}else {
-				System.out.println("멤버 수정 실패!");
-			}
-			 
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}finally {
-			try{pstmt.close();}catch(Exception e) {e.printStackTrace();}
-		}
-	}
-	public UserDTO Select(int member_no) {
-		UserDTO dto = null;
-		try {
-			sql="select * from Member_tbl where member_no=?";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, member_no);
+			pstmt.setInt(1, buy_no);
 			
 			rs = pstmt.executeQuery();
 			
 			
 			if(rs!=null) {
 				if(rs.next()) {
-					dto= new UserDTO();
-					dto.setMember_no(member_no);
-					dto.setMember_name(rs.getString("member_name"));
+					dto= new BuyDTO();
+					dto.setBuy_no(buy_no);
+					dto.setMember_no(rs.getInt("member_no"));
+					dto.setAcc_no(rs.getInt("acc_no"));
 					dto.setGrade(rs.getString("grade").charAt(0));
-					dto.setPhone(rs.getString("phone"));
-					dto.setAddress(rs.getString("address"));
+					dto.setBrand(rs.getString("brand"));
+					dto.setPrice(rs.getInt("price"));
 				}
 			}
 			
@@ -120,23 +123,25 @@ public class UserDAO {
 		}
 		return dto;
 	}
-	public List<UserDTO> SelectAll() {
-		List<UserDTO> list = new ArrayList();
-		UserDTO dto = null;
+	public List<BuyDTO> SelectAll() {
+		List<BuyDTO> list = new ArrayList();
+		BuyDTO dto = null;
 		try {
-			sql="select * from Member_tbl";
+			sql="select * from Buy_tbl";
 			pstmt = con.prepareStatement(sql);
 			
 			rs = pstmt.executeQuery();
 			
 			if(rs!=null) {
 				while(rs.next()) {
-					dto= new UserDTO();
+					dto= new BuyDTO();
+					dto.setBuy_no(rs.getInt("buy_no"));
 					dto.setMember_no(rs.getInt("member_no"));
-					dto.setMember_name(rs.getString("member_name"));
+					dto.setAcc_no(rs.getInt("acc_no"));
 					dto.setGrade(rs.getString("grade").charAt(0));
-					dto.setPhone(rs.getString("phone"));
-					dto.setAddress(rs.getString("address"));
+					dto.setBrand(rs.getString("brand"));
+					dto.setPrice(rs.getInt("price"));
+					
 					list.add(dto);
 				}
 			}
